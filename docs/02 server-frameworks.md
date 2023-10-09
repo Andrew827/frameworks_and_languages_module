@@ -308,7 +308,7 @@ Abstracting the entire server/client into one amorphous mega blog that deploys o
             build:
                 docker build --tag ${DOCKER_IMAGE} .
             run:
-                docker run --publish 8000:8000 ${DOCKER_IMAGE}
+                docker run --rm --publish 8000:8000 ${DOCKER_IMAGE}
             ```
     * Exiting from docker
         * By default express does not listen to SIGNALS. We need this extra line to allow docker to close on `ctrl + c`
