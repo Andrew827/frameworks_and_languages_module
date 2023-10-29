@@ -1,14 +1,14 @@
-const express = require('express')
-const app = express()
-const port = 8000
+const express = require('express');
+const app = express();
+const port = 8000;
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
+app.use(express.json()); 
 
 const itemDictionary = {};
+let nextID = 1; 
 
-function addItem(id, user_id, keywords, description, lat, lon, date_from) {
+function addItem(user_id, keywords, description, lat, lon, date_from) {
+  const id = nextID++; 
   const newItem = {
     "ID": id,
     "user_id": user_id,
@@ -19,31 +19,34 @@ function addItem(id, user_id, keywords, description, lat, lon, date_from) {
     "date_from": date_from
   };
 
-  itemDictionary[id] = newItem;
+  if (!itemDictionary[id]) {
+    itemDictionary[id] = [];
+  }
+  itemDictionary[id].push(newItem);
 }
 
-addItem(1, "user1234", ["hammer", "nails", "tools"], "A hammer and nails set", 1, 1, "2021-11-22T08:22:39.067408");
+app.get('/', (req, res) => {
+  res.send('Hello World!');
+});
 
-app.get('/items',(req, res) => 
-{
-  res.json(itemDictionary)
-})
+app.get('/itemDictionary', (req, res) => {
+  const items = Object.values(itemDictionary).flat();
+  res.json(items);
+});
 
-
-app.post('/itemDictionary', (req,res) =>
-{
-  items.push(req.body)
-  res.status(201).json(req.body)
-})
-
-app.delete('/items/:ID', (req, res) => {
-  console.log("Delete" + req.params.ID)
-  res.status(204).json()
-} )
+app.post('/addItem', (req, res) => {
+  const { user_id, keywords, description, lat, lon, date_from } = req.body;
+  addItem(user_id, keywords, description, lat, lon, date_from);
+  res.status(201).json(req.body);
+});
 
 
-
+app.delete('/itemDictionary/:ID', (req, res) => {
+  const id = req.params.ID;
+  delete itemDictionary[id];
+  res.status(204).json();
+});
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
+  console.log(`Example app listening on port ${port}`);
+});
