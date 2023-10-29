@@ -1,50 +1,71 @@
 const express = require('express');
 const app = express();
 const port = 8000;
+const cors = require('cors');
 
-app.use(express.json()); 
+app.use(cors());
+app.use(express.json());
 
-const itemDictionary = {};
-let nextID = 1; 
+const items = {};
+let nextID = 1;
 
 function addItem(user_id, keywords, description, lat, lon, date_from) {
-  const id = nextID++; 
+  const id = nextID++;
   const newItem = {
-    "ID": id,
-    "user_id": user_id,
-    "keywords": keywords,
-    "description": description,
-    "lat": lat,
-    "lon": lon,
-    "date_from": date_from
+    ID: id,
+    user_id,
+    keywords,
+    description,
+    lat,
+    lon,
+    date_from,
   };
 
-  if (!itemDictionary[id]) {
-    itemDictionary[id] = [];
+  if (!items[id]) {
+    items[id] = [];
   }
-  itemDictionary[id].push(newItem);
+
+  items[id].push(newItem);
+}
+
+function removeItem(id) {
+  if (items[id]) {
+    delete items[id];
+    Object.keys(items).forEach((key, index) => {
+      items[key].forEach((item) => {
+        item.ID = index + 1;
+      });
+    });
+
+    return true;
+  }
+
+  return false;
 }
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
-app.get('/itemDictionary', (req, res) => {
-  const items = Object.values(itemDictionary).flat();
-  res.json(items);
+app.get('/items', (req, res) => {
+  const allItems = Object.values(items).flat();
+  res.json(allItems);
 });
 
-app.post('/addItem', (req, res) => {
+app.post('/items', (req, res) => {
   const { user_id, keywords, description, lat, lon, date_from } = req.body;
   addItem(user_id, keywords, description, lat, lon, date_from);
   res.status(201).json(req.body);
 });
 
-
-app.delete('/itemDictionary/:ID', (req, res) => {
-  const id = req.params.ID;
-  delete itemDictionary[id];
-  res.status(204).json();
+app.delete('/items/:ID', (req, res) => {
+  const id = parseInt(req.params.ID);
+  const deleted = removeItem(id);
+  if (deleted) {
+    res.status(204).json();
+  } else {
+    res.status(404).json({ error: 'Item not found' });
+  }
 });
 
 app.listen(port, () => {
