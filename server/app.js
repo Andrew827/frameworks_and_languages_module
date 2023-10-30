@@ -52,7 +52,7 @@ app.get('/items', (req, res) => {
   res.json(allItems);
 });
 
-app.post('/items', (req, res) => {
+app.post('/addItem', (req, res) => {
   const { user_id, keywords, description, lat, lon, date_from } = req.body;
   addItem(user_id, keywords, description, lat, lon, date_from);
   res.status(201).json(req.body);
