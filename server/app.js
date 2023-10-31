@@ -11,7 +11,7 @@ let nextID = 1;
 
 function item(user_id, keywords, description, lat, lon) {
   const id = nextID++;
-  const date_from = new Date().toISOString(); // Get the current date in ISO format
+  const date_from = new Date().toISOString(); 
   const newItem = {
     id,
     user_id,
@@ -39,10 +39,10 @@ function removeItem(id) {
       });
     });
 
-    return true; // Item was deleted
+    return true; 
   }
 
-  return false; // Item not found
+  return false; 
 }
 
 app.get('/', (req, res) => {
