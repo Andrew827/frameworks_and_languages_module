@@ -9,6 +9,10 @@ app.use(express.json());
 const items = {};
 let nextID = 1;
 
+app.get('/', (req, res) =>{
+  res.sendFile('client.html', {root: __dirname})
+})
+
 function item(user_id, keywords, description, lat, lon) {
   const id = nextID++;
   const date_from = new Date().toISOString(); 
