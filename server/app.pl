@@ -1,21 +1,11 @@
 use Mojolicious::Lite -signatures;
 use JSON;
-use List::Util qw(first);
 use Mojolicious::Plugin::SecureCORS;
 
-plugin 'SecureCORS';
-
+app->plugin('SecureCORS');
 app->routes->to('cors.origin' => '*');
 
-get '/' => sub {
-    my $c = shift;
-
-    my $api_param = $c->param('api') // '/api/v1';
-  
-    $api_param =~ s{/$}{}; 
-
-    $c->render(text => "API: $api_param");
-};
+app->config(hypnotoad => {listen => ['http://*:8000']});
 
 my %items;
 my $next_id = 1;
@@ -86,3 +76,4 @@ del '/item/:id' => sub ($c) {
 };
 
 app->start('daemon', '-l', 'http://localhost:8000');
+

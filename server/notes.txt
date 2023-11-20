@@ -45,3 +45,16 @@ curl -X POST -H "Content-Type: application/json" -d '{"user_id":"345", "keywords
 curl -X POST -H "Content-Type: application/json" -d '{"user_id":"567", "keywords":"example", "description":"Sample item, four", "lat": 12.34, "lon": 56.78}' http://localhost:8000/item
 
 curl -X DELETE http://localhost:8000/item/2
+
+
+get '/' => sub {
+    my $c = shift;
+
+    my $api_param = $c->param('api') // '/api/v1';
+  
+    $api_param =~ s{/$}{}; 
+
+    $c->render(text => "API: $api_param");
+};
+
+#  PERL_VERSION=5.34
