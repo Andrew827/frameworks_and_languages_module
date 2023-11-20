@@ -1,6 +1,7 @@
 Install guide cpan - local lib - install Mojolicious::Lite - exit
 
 Install json using CPAN not npm. Prompted possible clash with Perl version. Seems to be working, 
+
 cpanm Mojolicious JSON
 
 Errors - 
@@ -18,6 +19,8 @@ http://localhost:8000' ????
 
 unsure if this is the same 
 
+They are the same .........
+
 Express - 
 
 Example app listening on port 8000
@@ -29,3 +32,16 @@ Express server
 
 Online suggested changing conftest but it still fails. Attempt to change endpoint to http://127.0.0.1:8000
 
+lsof -i :8000 (Close ports)
+
+Curl copy n paste 
+
+curl http://localhost:8000/items
+
+curl -X POST -H "Content-Type: application/json" -d '{"user_id":"123", "keywords":"example", "description":"Sample item, two", "lat": 12.34, "lon": 56.78}' http://localhost:8000/item
+
+curl -X POST -H "Content-Type: application/json" -d '{"user_id":"345", "keywords":"example", "description":"Sample item, three", "lat": 12.34, "lon": 56.78}' http://localhost:8000/item
+
+curl -X POST -H "Content-Type: application/json" -d '{"user_id":"567", "keywords":"example", "description":"Sample item, four", "lat": 12.34, "lon": 56.78}' http://localhost:8000/item
+
+curl -X DELETE http://localhost:8000/item/2

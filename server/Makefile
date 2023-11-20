@@ -1,5 +1,8 @@
-DOCKER_IMAGE:=express_test
+DOCKER_IMAGE := mymojoliciousapp
+
 build:
-	docker build --tag ${DOCKER_IMAGE} .
+    docker build --tag ${DOCKER_IMAGE} 
+
 run:
-	docker run --publish 8000:8000 ${DOCKER_IMAGE}
+    docker run --publish 8000:8000 ${DOCKER_IMAGE}
+

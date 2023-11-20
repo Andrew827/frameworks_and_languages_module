@@ -5,6 +5,18 @@ use Mojolicious::Plugin::SecureCORS;
 
 plugin 'SecureCORS';
 
+app->routes->to('cors.origin' => '*');
+
+get '/' => sub {
+    my $c = shift;
+
+    my $api_param = $c->param('api') // '/api/v1';
+  
+    $api_param =~ s{/$}{}; 
+
+    $c->render(text => "API: $api_param");
+};
+
 my %items;
 my $next_id = 1;
 
@@ -73,4 +85,4 @@ del '/item/:id' => sub ($c) {
     $c->render(json => { error => 'Item not found' }, status => 404);
 };
 
-app->start('daemon', '-l', 'http://*:8000');
+app->start('daemon', '-l', 'http://localhost:8000');

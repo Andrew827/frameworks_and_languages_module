@@ -13,6 +13,7 @@ def is_port_open(hostname, port):
 @pytest.fixture(scope="session")
 def ENDPOINT():
     return os.environ.get('URI_SERVER', 'http://localhost:8000').rstrip('/')
+    
 
 
 @pytest.fixture(scope="session", autouse=True)
