@@ -8,29 +8,11 @@ Errors -
 
 Testing errors show port is not running. I can use all curl commands to get / post and delete. 
 
-Maybe it has something to do with:
-
-Perl - 
-
-[2023-11-16 09:27:12.73717] [31909] [info] Listening at "http://*:8000"
-Web application available at http://127.0.0.1:8000
-
-http://localhost:8000' ????
-
-unsure if this is the same 
-
-They are the same .........
-
-Express - 
-
-Example app listening on port 8000
-
 Express server 
 
 
 5 hours getting this * to work, i'm not starting again ...... 
 
-Online suggested changing conftest but it still fails. Attempt to change endpoint to http://127.0.0.1:8000
 
 lsof -i :8000 (Close ports)
 

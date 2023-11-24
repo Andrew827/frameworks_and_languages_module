@@ -20,13 +20,13 @@ sub iso_datetime {
 }
 
 get '/' => sub ($c) {
-    $c->render(text => 'Welcome to the API!');
+    $c->render(text => 'Server - Framework Moja');
 };
 
 post '/item' => sub ($c) {
     my $params = $c->req->json;
     unless ($params->{user_id} && $params->{keywords} && $params->{description} && $params->{lat} && $params->{lon}) {
-        return $c->render(json => { error => 'Missing required fields' }, status => 200);
+        return $c->render(json => { error => 'Missing required fields' }, status => 405);
     }
 
     my $new_item = {
@@ -43,10 +43,28 @@ post '/item' => sub ($c) {
     $c->render(json => $new_item, status => 201);
 };
 
+# Test failure due to output being in a different format. Sorting alg needed, this way it should pass the test.
+
 get '/items' => sub ($c) {
+
     my @all_items = map { @$_ } values %items;
-    $c->render(json => \@all_items, status => 200);
+
+
+    my @desired_order = qw(id user_id keywords description lat lon date_from);
+
+
+    my @sorted_items = sort { $a->{id} <=> $b->{id} } @all_items;
+
+
+    my @formatted_items = map {
+        my %formatted_item;
+        @formatted_item{@desired_order} = @$_{@desired_order};
+        \%formatted_item;
+    } @sorted_items;
+
+    $c->render(json => \@formatted_items, status => 200);
 };
+
 
 get '/item/:id' => sub ($c) {
     my $id   = $c->stash('id');
@@ -58,6 +76,24 @@ get '/item/:id' => sub ($c) {
         $c->render(json => { error => 'Item not found' }, status => 404);
     }
 };
+
+get '/items' => sub ($c) {
+    my @all_items = map { @$_ } values %items;
+    my @sorted_items = sort { $a->{id} <=> $b->{id} } @all_items;
+
+    my @formatted_items = map { format_item($_) } @sorted_items;
+
+    $c->render(json => \@formatted_items, status => 200);
+};
+
+
+sub format_item {
+    my ($item) = @_;
+    my @desired_order = qw(id user_id keywords description lat lon date_from);
+    my %formatted_item;
+    @formatted_item{@desired_order} = @{$item}{@desired_order};
+    return \%formatted_item;
+}
 
 del '/item/:id' => sub ($c) {
     my $id      = $c->stash('id');
