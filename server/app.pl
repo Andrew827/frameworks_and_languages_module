@@ -4,11 +4,12 @@ use List::Util qw(first);
 use Mojolicious::Plugin::SecureCORS;
 
 app->hook(before_dispatch => sub ($c) {
-    $c->res->headers->header('Access-Control-Allow-Origin' => '*');
+    $c->res->headers->header('Access-Control-Allow-Origin' => 'http://localhost:8001');  
     $c->res->headers->header('Access-Control-Allow-Methods' => 'GET, POST, PUT, DELETE, OPTIONS');
     $c->res->headers->header('Access-Control-Allow-Headers' => 'Content-Type');
     $c->res->headers->header('Access-Control-Max-Age' => '3600');
 });
+
 
 app->config(hypnotoad => {listen => ['http://*:8000']});
 

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Item Management</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lumx@2.0.0/dist/lumx.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/lumx@2.0.0/dist/lumx.js"></script>
+</head>
+<body ng-app="myApp">
+
+    <h1>Free Cycle</h1>
+
+    <div ng-controller="MainController" class="lx-container lx-v-align-middle">
+
+        <h2>Add New Item</h2>
+        <form ng-submit="addItem($event)" class="lx-form">
+            <div class="lx-input-group">
+                <input type="text" ng-model="newItem.user_id" placeholder="User ID" required class="lx-text-field">
+            </div>
+            <div class="lx-input-group">
+                <input type="text" ng-model="newItem.keywords" placeholder="Keywords" required class="lx-text-field">
+            </div>
+            <div class="lx-input-group">
+                <input type="text" ng-model="newItem.description" placeholder="Description" required class="lx-text-field">
+            </div>
+            <div class="lx-input-group">
+                <input type="text" ng-model="newItem.lat" placeholder="Latitude" required class="lx-text-field">
+            </div>
+            <div class="lx-input-group">
+                <input type="text" ng-model="newItem.lon" placeholder="Longitude" required class="lx-text-field">
+            </div>
+            <button type="submit" class="lx-button lx-button--raised">Add Item</button>
+        </form>
+
+        <h2>All Items</h2>
+        <ul class="lx-list">
+            <li ng-repeat="item in allItems" class="lx-list__item">
+                <button ng-click="deleteItem(item.id)" class="lx-button lx-button--icon">
+                    <i class="mdi mdi-delete"></i>
+                </button>
+            </li>
+        </ul>
+
+    </div>
+
+    <script>
+        var app = angular.module('myApp', ['lumx']);
+
+        app.controller('MainController', function($scope, $http) {
+            $scope.newItem = {};
+            $scope.allItems = [];
+
+            $scope.addItem = function(event) {
+                event.preventDefault(); 
+
+                $http.post('http://localhost:8000/item', JSON.stringify($scope.newItem), {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(function(response) {
+                    console.log('Server response:', response.data);
+                    $scope.allItems = response.data; 
+                    $scope.newItem = {};
+                    lx.Notification.success('Item added successfully');
+                })
+                .catch(function(error) {
+                    console.error('Error adding item:', error);
+                    lx.Notification.error('Failed to add item');
+                });
+            };
+
+            $scope.deleteItem = function(itemId) {
+                $http.delete(`http://localhost:8000/item/${itemId}`)
+                    .then(function() {
+                        $scope.allItems = $scope.allItems.filter(function(item) {
+                            return item.id !== itemId;
+                        });
+                        lx.Notification.success('Item deleted successfully');
+                    })
+                    .catch(function(error) {
+                        console.error('Error deleting item:', error);
+                        lx.Notification.error('Failed to delete item');
+                    });
+            };
+
+            $http.get('http://localhost:8000/items')
+                .then(function(response) {
+                    $scope.allItems = response.data;
+                })
+                .catch(function(error) {
+                    console.error('Error fetching items:', error);
+                });
+        });
+    </script>
+
+</body>
+</html>
