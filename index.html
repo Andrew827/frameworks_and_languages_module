@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Cycle</title>
+    <!-- Link to bulma -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+</head>
+<body>
+
+    <nav class="navbar has-shadow is-white"> 
+        <div class="navbar-brand">
+            <a class="navbar-item">
+                <!-- Icon not running, deal with that later!!!-->
+                <img src="assets/Recycle.png" alt="site logo" style="max-height: 70px" class="py-2 px-2">
+            </a>
+            <a class="navbar-burger" id="burger">
+                <!-- Attach event-->
+                <span></span>
+                <span></span>
+                <span></span>
+            </a>
+            
+        </div>
+
+        <div class="navbar-menu" id="nav-links"> <!-- Attach event-->
+            <div class="navbar-end">
+                <a class="navbar-item">My Account</a>
+                <a class="navbar-item">Help</a>
+                <a class="navbar-item">About us</a>
+            </div>
+        </div>
+    </nav>
+    
+    <section class="Section">
+        <div class="container">
+            <div class="column">
+                <button class="button is-medium is-fullwidth add-item-button">Add Item</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Container for the form -->
+    <div id="addItemFormContainer"></div>
+
+    <div class="section pt-4 pb-0">
+        <nav class="breadcrumbs has-bullet-separator">   
+            <ul class="container">
+                <li class="is-active"><a>Catalog</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <section class="Section">
+        <div class="container">
+            <div class="columns">
+                <div class="column"> 
+                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quas aliquid quod ex iusto eum reiciendis fugiat nulla modi, dolores, officia inventore. Aperiam saepe modi repudiandae possimus accusantium corrupti hic accusamus.</p>
+                    <button class="button is-normal">Delete Item</button>
+                </div> 
+                <div class="column"> 
+                    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. A illum nesciunt inventore nulla vel, impedit ab? Ab velit nostrum, quia porro, quidem vel optio nemo excepturi sed quae iure suscipit?</p>
+                    <button class="button is-normal">Delete Item</button>
+                </div>
+                <div class="column"> 
+                    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. A illum nesciunt inventore nulla vel, impedit ab? Ab velit nostrum, quia porro, quidem vel optio nemo excepturi sed quae iure suscipit?</p>
+                    <button class="button is-normal">Delete Item</button>
+                </div>  
+            </div>
+        </div>
+    </section>
+
+    <script src="index.js"></script>
+
+</body>
+</html>
