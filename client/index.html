@@ -12,11 +12,11 @@
     <nav class="navbar has-shadow is-white"> 
         <div class="navbar-brand">
             <a class="navbar-item">
-                <!-- Icon not running, deal with that later!!!-->
-                <img src="assets/Recycle.png" alt="site logo" style="max-height: 70px" class="py-2 px-2">
+                
+                <img src="../assets/Recycle.png" alt="site logo" style="max-height: 70px" class="py-2 px-2">
             </a>
             <a class="navbar-burger" id="burger">
-                <!-- Attach event-->
+               
                 <span></span>
                 <span></span>
                 <span></span>
@@ -24,7 +24,7 @@
             
         </div>
 
-        <div class="navbar-menu" id="nav-links"> <!-- Attach event-->
+        <div class="navbar-menu" id="nav-links">
             <div class="navbar-end">
                 <a class="navbar-item">My Account</a>
                 <a class="navbar-item">Help</a>
@@ -32,17 +32,48 @@
             </div>
         </div>
     </nav>
-    
-    <section class="Section">
-        <div class="container">
-            <div class="column">
-                <button class="button is-medium is-fullwidth add-item-button">Add Item</button>
-            </div>
+
+
+    <section class = "section">
+        <div class = "container">
+            <div class = "column">
+                
+                <div class="field ">
+                     <label class="label">name</label>
+                        <div class="control">
+                            <input class="input is-rounded" type="text" placeholder="e.g Andrew Wright">
+                        </div>
+                </div>
+                  
+                <div class="field">
+                    <label class="label">description</label>
+                        <div class="control">
+                          <input class="input is-rounded" type="text" placeholder="e.g. white">
+                        </div>
+                </div>
+
+                <div class = "field">
+                    <label class = "label">keywords</label>
+                        <div class = "control"> 
+                            <input class = "input is-rounded" type = "int" placeholder="e.g. hammer">
+                        </div>
+                </div>
+
+                <div class = "field">
+                     <label class = "label">Long</label>
+                        <div class = "control">
+                            <input class = "input is-rounded" type = "int" placeholder="e.g. 145">
+                        </div>
+                </div>
+
+                <div class = "field">
+                    <label class = "label">Lat</label>
+                       <div class = "control">
+                           <input class = "input is-rounded" type = "int" placeholder="e.g. 145">
+                       </div>
+               </div>
         </div>
     </section>
-
-    <!-- Container for the form -->
-    <div id="addItemFormContainer"></div>
 
     <div class="section pt-4 pb-0">
         <nav class="breadcrumbs has-bullet-separator">   
@@ -51,7 +82,7 @@
             </ul>
         </nav>
     </div>
-
+   
     <section class="Section">
         <div class="container">
             <div class="columns">
@@ -70,8 +101,6 @@
             </div>
         </div>
     </section>
-
-    <script src="index.js"></script>
 
 </body>
 </html>
