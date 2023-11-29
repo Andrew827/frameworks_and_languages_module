@@ -1,30 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" x-data="{ isMenuOpen: false }">
 <head>
+   
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Free Cycle</title>
-    <!-- Link to bulma -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.js" defer></script>
 </head>
 <body>
 
     <nav class="navbar has-shadow is-white"> 
         <div class="navbar-brand">
             <a class="navbar-item">
-                
-                <img src="../assets/Recycle.png" alt="site logo" style="max-height: 70px" class="py-2 px-2">
+                <img src="Recycle.png" alt="site logo" style="max-height: 70px" class="py-2 px-2">
             </a>
-            <a class="navbar-burger" id="burger">
-               
+            <a class="navbar-burger" x-on:click="isMenuOpen = !isMenuOpen">
                 <span></span>
                 <span></span>
                 <span></span>
             </a>
-            
         </div>
 
-        <div class="navbar-menu" id="nav-links">
+        <div class="navbar-menu" :class="{ 'is-active': isMenuOpen }">
             <div class="navbar-end">
                 <a class="navbar-item">My Account</a>
                 <a class="navbar-item">Help</a>
@@ -34,73 +33,150 @@
     </nav>
 
 
-    <section class = "section">
-        <div class = "container">
-            <div class = "column">
-                
-                <div class="field ">
-                     <label class="label">name</label>
-                        <div class="control">
-                            <input class="input is-rounded" type="text" placeholder="e.g Andrew Wright">
-                        </div>
-                </div>
-                  
-                <div class="field">
-                    <label class="label">description</label>
-                        <div class="control">
-                          <input class="input is-rounded" type="text" placeholder="e.g. white">
-                        </div>
-                </div>
 
-                <div class = "field">
-                    <label class = "label">keywords</label>
-                        <div class = "control"> 
-                            <input class = "input is-rounded" type = "int" placeholder="e.g. hammer">
-                        </div>
-                </div>
-
-                <div class = "field">
-                     <label class = "label">Long</label>
-                        <div class = "control">
-                            <input class = "input is-rounded" type = "int" placeholder="e.g. 145">
-                        </div>
-                </div>
-
-                <div class = "field">
-                    <label class = "label">Lat</label>
-                       <div class = "control">
-                           <input class = "input is-rounded" type = "int" placeholder="e.g. 145">
-                       </div>
-               </div>
-        </div>
-    </section>
-
-    <div class="section pt-4 pb-0">
-        <nav class="breadcrumbs has-bullet-separator">   
-            <ul class="container">
-                <li class="is-active"><a>Catalog</a></li>
-            </ul>
-        </nav>
-    </div>
-   
-    <section class="Section">
+    <section class="section">
         <div class="container">
             <div class="columns">
                 <div class="column"> 
-                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quas aliquid quod ex iusto eum reiciendis fugiat nulla modi, dolores, officia inventore. Aperiam saepe modi repudiandae possimus accusantium corrupti hic accusamus.</p>
-                    <button class="button is-normal">Delete Item</button>
-                </div> 
-                <div class="column"> 
-                    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. A illum nesciunt inventore nulla vel, impedit ab? Ab velit nostrum, quia porro, quidem vel optio nemo excepturi sed quae iure suscipit?</p>
-                    <button class="button is-normal">Delete Item</button>
+                    <div id="myForm">
+                        <div class="field">
+                            <label class="label">Name</label>
+                            <div class="control">
+                                <input id="nameInput" class="input is-rounded" type="text" placeholder="e.g. Andrew Wright">
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label class="label">Lat</label>
+                            <div class="control">
+                                <input id="logInput" class="input is-rounded" type="number" placeholder="e.g. 145">
+                            </div>
+                        </div>
+                    
+                        <div class="field">
+                            <label class="label">Lon</label>
+                            <div class="control">
+                                <input id="latInput" class="input is-rounded" type="number" placeholder="e.g. 145">
+                            </div>
+                        </div>
+                                            
+                        <div class="field">
+                            <label class="label">Description</label>
+                            <div class="control">
+                                <input id="descriptionInput" class="input is-rounded" type="text" placeholder="e.g. white">
+                            </div>
+                        </div>
+                    
+                        <div class="field">
+                            <label class="label">Keywords</label>
+                            <div class="control">
+                                <input id="keywordsInput" class="input is-rounded" type="text" placeholder="e.g. hammer">
+                            </div>
+                        </div>
+                    
+                        <div class="field">
+                            <div class="control">
+                                <button class="button is-rounded" type="button" onclick="submitForm()">addItem</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="column"> 
-                    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. A illum nesciunt inventore nulla vel, impedit ab? Ab velit nostrum, quia porro, quidem vel optio nemo excepturi sed quae iure suscipit?</p>
-                    <button class="button is-normal">Delete Item</button>
-                </div>  
-            </div>
+            </div>    
         </div>
     </section>
 
+    <section class = "section">
+        <div class="section pt-4 pb-0">
+            <nav class="breadcrumbs has-bullet-separator">   
+                <ul class="container">
+                    <li class="is-active"><a>Catalog</a></li>
+                </ul>
+            </nav>
+        </div>
+    </section>
+
+    <section id="catalog-section" class="Section">
+        
+    </section>
+
+    <script>
+        function submitForm() {
+            var name = document.getElementById("nameInput").value;
+    var description = document.getElementById("descriptionInput").value;
+    var keywords = document.getElementById("keywordsInput").value;
+    var log = document.getElementById("logInput").value;
+    var lat = document.getElementById("latInput").value;
+    
+    if (name.trim() === "") {
+        alert("Name cannot be empty. Please enter a name.");
+        return;
+    }
+
+    if (description.trim() === "") {
+        alert("Name cannot be empty. Please enter a name.");
+        return;
+    }
+
+    if (keywords.trim() === "") {
+        alert("Name cannot be empty. Please enter a name.");
+        return;
+    }
+
+    if(lat.trim() === "") {
+        alert("Lat cannot be empty. Please enter Lat");
+        return;
+    }
+
+    if(log.trim() === "") {
+        alert("Log cannot be empty. Please enter Lat");
+        return;
+        }
+
+
+    var isoDate = new Date().toISOString();
+
+    alert("item submitted successfully!");
+
+    var itemContainer = document.createElement("div");
+    itemContainer.className = "column is-one-third";
+    itemContainer.style.padding = "10px"; 
+
+    var itemContent = document.createElement("div");
+    itemContent.className = "content";
+
+    
+    itemContent.innerHTML = `
+        <p class="title is-4">${name}</p>
+        <p><strong>Description:</strong> ${description}</p>
+        <p><strong>Keywords:</strong> ${keywords}</p>
+        <p><strong>Log:</strong> ${log}</p>
+        <p><strong>Lat:</strong> ${lat}</p>
+        <p><strong>ISO Date:</strong> ${isoDate}</p>
+        <button class="button is-rounded is-danger" onclick="deleteItem(this)">Delete</button>
+    `;
+
+  
+    itemContainer.appendChild(itemContent);
+
+    var catalogSection = document.querySelector('#catalog-section');
+
+    var existingRow = catalogSection.querySelector('.columns');
+
+    if (!existingRow || existingRow.children.length === 3) {
+      
+        var newRow = document.createElement('div');
+        newRow.className = 'columns';
+        catalogSection.appendChild(newRow);
+        existingRow = newRow;
+    }
+
+    existingRow.appendChild(itemContainer);
+        }
+
+        function deleteItem(button) {
+            var itemContainer = button.parentNode.parentNode;
+            itemContainer.parentNode.removeChild(itemContainer);
+        }
+    </script>
 </body>
 </html>

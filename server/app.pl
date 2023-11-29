@@ -10,9 +10,6 @@ app->hook(before_dispatch => sub ($c) {
     $c->res->headers->header('Access-Control-Max-Age' => '3600');
 });
 
-
-app->config(hypnotoad => {listen => ['http://*:8000']});
-
 my %items;
 my $next_id = 1;
 
