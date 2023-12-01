@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" x-data="{ isMenuOpen: false }" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Cycle</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+</head>
+<body>
+
+    <nav class="navbar bg-white shadow"> 
+        <div class="container mx-auto">
+            <div class="flex items-center justify-between p-4">
+                <a href="#" class="text-xl font-bold">
+                    <img src="Recycle.png" alt="site logo" style="max-height: 70px" class="py-2 px-2">
+                </a>
+                <button class="text-gray-600 focus:outline-none lg:hidden" x-on:click="isMenuOpen = !isMenuOpen">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                </button>
+                <div class="hidden lg:flex space-x-4">
+                    <a href="#" class="text-gray-800">My Account</a>
+                    <a href="#" class="text-gray-800">Help</a>
+                    <a href="#" class="text-gray-800">About us</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="lg:hidden" x-show="isMenuOpen" x-on:click.away="isMenuOpen = false">
+            <div class="bg-white">
+                <a href="#" class="block p-4">My Account</a>
+                <a href="#" class="block p-4">Help</a>
+                <a href="#" class="block p-4">About us</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="py-16">
+        <div class="container mx-auto">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div id="myForm">
+                    <div class="bg-white p-8 rounded shadow">
+                        <label class="block text-lg font-bold mb-4">Name</label>
+                        <input id="nameInput" class="w-full py-2 px-4 border rounded" type="text" placeholder="e.g. Andrew Wright">
+
+                        
+
+                        <button class="mt-4 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded" type="button" v-on:click="submitForm">Add Item</button>
+                    </div>
+                </div>
+            </div>    
+        </div>
+    </section>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script>
+        new Vue({
+            el: 'html',
+            data: {
+                isMenuOpen: false
+            },
+            methods: {
+                submitForm: function() {
+                    
+                },
+                deleteItem: function(button) {
+                    
+                }
+            }
+        });
+    </script>
+</body>
+</html>
