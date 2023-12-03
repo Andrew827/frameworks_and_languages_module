@@ -1,76 +1,178 @@
 <!DOCTYPE html>
-<html lang="en" x-data="{ isMenuOpen: false }" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<html lang="en" x-data="myForm()">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Free Cycle</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free Cycle</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.js" defer></script>
 </head>
+
 <body>
 
-    <nav class="navbar bg-white shadow"> 
-        <div class="container mx-auto">
-            <div class="flex items-center justify-between p-4">
-                <a href="#" class="text-xl font-bold">
-                    <img src="Recycle.png" alt="site logo" style="max-height: 70px" class="py-2 px-2">
-                </a>
-                <button class="text-gray-600 focus:outline-none lg:hidden" x-on:click="isMenuOpen = !isMenuOpen">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-                    </svg>
-                </button>
-                <div class="hidden lg:flex space-x-4">
-                    <a href="#" class="text-gray-800">My Account</a>
-                    <a href="#" class="text-gray-800">Help</a>
-                    <a href="#" class="text-gray-800">About us</a>
+  <nav class="navbar has-shadow is-white">
+    <div class="navbar-brand">
+      <a class="navbar-item">
+        <img src="Recycle.png" alt="site logo" style="max-height: 70px" class="py-2 px-2">
+      </a>
+      <button @click="isMenuOpen = !isMenuOpen" class="navbar-burger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+
+    <div class="navbar-menu" x-bind:class="{ 'is-active': isMenuOpen }">
+      <div class="navbar-end">
+        <a class="navbar-item">My Account</a>
+        <a class="navbar-item">Help</a>
+        <a class="navbar-item">About us</a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="section">
+    <div class="container">
+      <div class="columns">
+        <div class="column">
+          <div id="myForm">
+            <div x-data="{ name: '', lat: '', lon: '', description: '', keywords: '', items: [] }">
+              <div class="field">
+                <label class="label">Name</label>
+                <div class="control">
+                  <input x-model="name" class="input is-rounded" type="text" placeholder="e.g. Andrew Wright" id="nameInput">
                 </div>
-            </div>
-        </div>
+              </div>
 
-        <div class="lg:hidden" x-show="isMenuOpen" x-on:click.away="isMenuOpen = false">
-            <div class="bg-white">
-                <a href="#" class="block p-4">My Account</a>
-                <a href="#" class="block p-4">Help</a>
-                <a href="#" class="block p-4">About us</a>
-            </div>
-        </div>
-    </nav>
-
-    <section class="py-16">
-        <div class="container mx-auto">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div id="myForm">
-                    <div class="bg-white p-8 rounded shadow">
-                        <label class="block text-lg font-bold mb-4">Name</label>
-                        <input id="nameInput" class="w-full py-2 px-4 border rounded" type="text" placeholder="e.g. Andrew Wright">
-
-                        
-
-                        <button class="mt-4 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded" type="button" v-on:click="submitForm">Add Item</button>
-                    </div>
+              <div class="field">
+                <label class="label">Lat</label>
+                <div class="control">
+                  <input x-model="lat" class="input is-rounded" type="number" placeholder="e.g. 145" id="latInput">
                 </div>
-            </div>    
+              </div>
+
+              <div class="field">
+                <label class="label">Lon</label>
+                <div class="control">
+                  <input x-model="lon" class="input is-rounded" type="number" placeholder="e.g. 145" id="lonInput">
+                </div>
+              </div>
+
+              <div class="field">
+                <label class="label">Description</label>
+                <div class="control">
+                  <input x-model="description" class="input is-rounded" type="text" placeholder="e.g. white" id="descriptionInput">
+                </div>
+              </div>
+
+              <div class="field">
+                <label class="label">Keywords</label>
+                <div class="control">
+                  <input x-model="keywords" class="input is-rounded" type="text" placeholder="e.g. hammer" id="keywordsInput">
+                </div>
+              </div>
+
+              <div class="field">
+                <div class="control">
+                  <button @click="submitForm()" class="button is-rounded">addItem</button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
 
+  <section class="section">
+    <div class="section pt-4 pb-0">
+      <nav class="breadcrumbs has-bullet-separator">
+        <ul class="container">
+          <li class="is-active"><a>Catalog</a></li>
+        </ul>
+      </nav>
+    </div>
+  </section>
 
+  <section id="catalog-section" class="Section">
+    <div x-show="items.length > 0">
+      <div x-for="postedItem in items" :key="postedItem.id" class="column is-one-third" style="padding: 10px;">
+        <div class="content">
+          <p class="title is-4" x-text="postedItem.name"></p>
+          <p><strong>Description:</strong> <span x-text="postedItem.description"></span></p>
+          <p><strong>Keywords:</strong> <span x-text="postedItem.keywords"></span></p>
+          <p><strong>Log:</strong> <span x-text="postedItem.lon"></span></p>
+          <p><strong>Lat:</strong> <span x-text="postedItem.lat"></span></p>
+          <p><strong>ISO Date:</strong> <span x-text="postedItem.date_from"></span></p>
+          <button @click="deleteItem(postedItem.id)" class="button is-rounded is-danger">Delete</button>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
-    <script>
-        new Vue({
-            el: 'html',
-            data: {
-                isMenuOpen: false
-            },
-            methods: {
-                submitForm: function() {
-                    
-                },
-                deleteItem: function(button) {
-                    
-                }
-            }
-        });
-    </script>
-</body>
-</html>
+ 
+<script>
+  function submitForm() {
+    var name = document.getElementById("nameInput").value;
+    var description = document.getElementById("descriptionInput").value;
+    var keywords = document.getElementById("keywordsInput").value;
+    var lon = document.getElementById("lonInput").value;
+    var lat = document.getElementById("latInput").value;
+
+    if (name.trim() === "" || description.trim() === "" || keywords.trim() === "" || lon.trim() === "" || lat.trim() === "") {
+      alert("Please fill in all required fields");
+      return;
+    }
+
+    var isoDate = new Date().toISOString();
+
+    alert("Item submitted successfully!");
+
+    var newItem = {
+      name: name,
+      description: description,
+      keywords: keywords,
+      lon: lon,
+      lat: lat,
+      date_from: isoDate
+    };
+
+    items.unshift(newItem);
+
+    fetch('item', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newItem),
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Server response:', data);
+    })
+    .catch(error => {
+      console.error('Error submitting item:', error);
+    });
+  }
+
+  function deleteItem(itemId) {
+  
+    items = items.filter(item => item.id !== itemId);
+
+    
+    fetch(`item/${itemId}`, {
+      method: 'DELETE',
+    })
+    .then(response => {
+      if (response.ok) {
+        console.log(`Item with ID ${itemId} deleted successfully`);
+      } else {
+        console.error(`Error deleting item with ID ${itemId}`);
+      }
+    })
+    .catch(error => {
+      console.error('Error deleting item:', error);
+    });
+  }
+</script>

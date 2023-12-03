@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free Cycle</title>
+  <script src="https://unpkg.com/vue@3"></script>
+</head>
+
+<body>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const createApp = Vue.createApp;
+
+      const app = createApp({
+        data() {
+          return {
+            message: 'hello',
+            item: {
+              user_id: '',
+              keywords: '',
+              description: '',
+              lat: '',
+              lon: ''
+            },
+            apiEndpoint: '/item', // Update with your actual API endpoint
+            items: [],
+          };
+        },
+
+        methods: {
+          clearForm() {
+            // Clear form fields
+            for (const key in this.item) {
+              this.item[key] = '';
+            }
+          },
+
+          postForm() {
+            // Basic form validation
+            if (!this.item.user_id || !this.item.keywords || !this.item.description || !this.item.lat || !this.item.lon) {
+              console.error('Please fill in all required fields');
+              return;
+            }
+
+            // POST request to API
+            fetch(this.apiEndpoint, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(this.item),
+              })
+              .then(response => response.json())
+              .then(json => {
+                console.log('Item added successfully:', json);
+                // Optionally, you can clear the form after successful submission
+                this.clearForm();
+                // Add the new item to the list
+                this.items.unshift(json);
+              })
+              .catch(err => console.error('Error adding item:', err));
+          },
+
+          deleteItem(itemId) {
+            // DELETE request to API
+            fetch(`${this.apiEndpoint}/${itemId}`, {
+                method: 'DELETE',
+              })
+              .then(response => {
+                if (response.ok) {
+                  // Remove the item from the list
+                  this.items = this.items.filter(item => item.id !== itemId);
+                } else {
+                  console.error(`Error deleting item with ID ${itemId}`);
+                }
+              })
+              .catch(err => console.error('Error deleting item:', err));
+          },
+        },
+      });
+
+      app.mount('#app');
+    });
+  </script>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
+      }
+    }
+  </script>
+
+  <div id="app">
+    <h1>FreeCycle!</h1>
+    <div class="comment-box">
+      <p>Post your item</p>
+      <form @submit.prevent="postForm">
+        <input v-model="item.user_id" name="user_id" :placeholder="'Enter your user id'" />
+        <input v-model="item.keywords" name="keywords" :placeholder="'keywords'" />
+        <input v-model="item.description" name="description" :placeholder="'description'" />
+        <input v-model="item.lat" name="lat" :placeholder="'lat'" />
+        <input v-model="item.lon" name="lon" :placeholder="'lon'" />
+        <button type="submit">addItem</button>
+      </form>
+    </div>
+
+    <!-- Display posted items -->
+    <div class="posted-items">
+      <h2>Posted Items</h2>
+      <ul>
+        <li v-for="postedItem in items" :key="postedItem.id">
+          <strong>ID:</strong> {{ postedItem.id }}<br>
+          <strong>User ID:</strong> {{ postedItem.user_id }}<br>
+          <strong>Keywords:</strong> {{ postedItem.keywords }}<br>
+          <strong>Description:</strong> {{ postedItem.description }}<br>
+          <strong>Latitude:</strong> {{ postedItem.lat }}<br>
+          <strong>Longitude:</strong> {{ postedItem.lon }}<br>
+          <strong>Date:</strong> {{ postedItem.date_from }}<br>
+          <button @click="deleteItem(postedItem.id)">Delete</button>
+          <hr>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+</body>
+
+</html>

@@ -20,7 +20,6 @@ describe('FreeCycle', () => {
 				lat: '1',
 				lon: '1',
 				description: 'item from cypress test',
-				image: 'http://placekitten.com/100/100',
 				keywords: 'item1, item2, item3',
 			},
 			...kwargs,

@@ -4,11 +4,15 @@ use List::Util qw(first);
 use Mojolicious::Plugin::SecureCORS;
 
 app->hook(before_dispatch => sub ($c) {
-    $c->res->headers->header('Access-Control-Allow-Origin' => 'http://localhost:8001');  
+    $c->res->headers->header('Access-Control-Allow-Origin' => '*');  
     $c->res->headers->header('Access-Control-Allow-Methods' => 'GET, POST, PUT, DELETE, OPTIONS');
     $c->res->headers->header('Access-Control-Allow-Headers' => 'Content-Type');
     $c->res->headers->header('Access-Control-Max-Age' => '3600');
 });
+
+get '/' => sub ($c) {
+    $c->reply->file('../client/client.html');
+};
 
 my %items;
 my $next_id = 1;
@@ -16,6 +20,11 @@ my $next_id = 1;
 sub iso_datetime {
     return Mojo::Date->new->to_datetime;
 }
+
+
+get '/hello' => sub ($c) {
+    $c->render(json => { message => 'Hello, World!' });
+};
 
 get '/' => sub ($c) {
     $c->render(text => 'Server - Framework Moja');

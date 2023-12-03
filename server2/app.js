@@ -2,14 +2,13 @@ const express = require('express');
 const app = express();
 const port = 8000;
 const cors = require('cors');
+const path = require('path');
 
 app.use(cors());
 app.use(express.json());
 
 const items = {};
 let nextID = 1;
-
-
 
 function item(user_id, keywords, description, lat, lon) {
   const id = nextID++;
