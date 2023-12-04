@@ -11,7 +11,7 @@ app->hook(before_dispatch => sub ($c) {
 });
 
 get '/' => sub ($c) {
-    $c->reply->file('../client/client.html');
+    $c->reply->file('../client/index.html');
 };
 
 my %items;
