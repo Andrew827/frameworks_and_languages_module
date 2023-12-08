@@ -8,6 +8,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@material/web": "^1.0.1",
     "body-parser": "^1.20.2",
     "bootstrap": "^5.3.2",
     "bootstrap-vue": "^2.23.1",
