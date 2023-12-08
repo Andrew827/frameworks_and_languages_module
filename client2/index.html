@@ -1,29 +1,28 @@
 <!DOCTYPE html>
-<html lang="en" x-data="myForm()">
+<html lang="en">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Free Cycle</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.js" defer></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+  <title>Your Client Title</title>
 </head>
 
 <body>
-
   <nav class="navbar has-shadow is-white">
     <div class="navbar-brand">
       <a class="navbar-item">
-        <img src="Recycle.png" alt="site logo" style="max-height: 70px" class="py-2 px-2">
+        <img src="/assets/recycling-symbol.webp" alt="site logo" style="max-height: 70px" class="py-2 px-2">
       </a>
-      <button @click="isMenuOpen = !isMenuOpen" class="navbar-burger">
+      <button @click="toggleMenu" class="navbar-burger">
         <span></span>
         <span></span>
         <span></span>
       </button>
     </div>
 
-    <div class="navbar-menu" x-bind:class="{ 'is-active': isMenuOpen }">
+    <div class="navbar-menu" :class="{ 'is-active': isMenuOpen }">
       <div class="navbar-end">
         <a class="navbar-item">My Account</a>
         <a class="navbar-item">Help</a>
@@ -36,143 +35,150 @@
     <div class="container">
       <div class="columns">
         <div class="column">
-          <div id="myForm">
-            <div x-data="{ name: '', lat: '', lon: '', description: '', keywords: '', items: [] }">
+          <div class="comment-box">
+            <form id="myForm" class="myForm" onsubmit="return postForm(event);">
               <div class="field">
                 <label class="label">Name</label>
                 <div class="control">
-                  <input x-model="name" class="input is-rounded" type="text" placeholder="e.g. Andrew Wright" id="nameInput">
+                  <input id="user_id" class="input is-rounded" type="text" :placeholder="'e.g. Andrew Wright'" />
                 </div>
               </div>
 
               <div class="field">
                 <label class="label">Lat</label>
                 <div class="control">
-                  <input x-model="lat" class="input is-rounded" type="number" placeholder="e.g. 145" id="latInput">
+                  <input id="lat" class="input is-rounded" type="number" :placeholder="'e.g. 145'" />
                 </div>
               </div>
 
               <div class="field">
                 <label class="label">Lon</label>
                 <div class="control">
-                  <input x-model="lon" class="input is-rounded" type="number" placeholder="e.g. 145" id="lonInput">
+                  <input id="lon" class="input is-rounded" type="number" :placeholder="'e.g. 145'" />
                 </div>
               </div>
 
               <div class="field">
                 <label class="label">Description</label>
                 <div class="control">
-                  <input x-model="description" class="input is-rounded" type="text" placeholder="e.g. white" id="descriptionInput">
+                  <input id="description" class="input is-rounded" type="text" :placeholder="'e.g. white'" />
                 </div>
               </div>
 
               <div class="field">
                 <label class="label">Keywords</label>
                 <div class="control">
-                  <input x-model="keywords" class="input is-rounded" type="text" placeholder="e.g. hammer" id="keywordsInput">
+                  <input id="keywords" class="input is-rounded" type="text" :placeholder="'e.g. hammer'" />
                 </div>
               </div>
 
               <div class="field">
                 <div class="control">
-                  <button @click="submitForm()" class="button is-rounded">addItem</button>
+                  <button type="submit" class="button is-rounded">Add Item</button>
                 </div>
               </div>
-            </div>
+            </form>
           </div>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="section pt-4 pb-0">
-      <nav class="breadcrumbs has-bullet-separator">
-        <ul class="container">
-          <li class="is-active"><a>Catalog</a></li>
-        </ul>
-      </nav>
-    </div>
-  </section>
-
-  <section id="catalog-section" class="Section">
-    <div x-show="items.length > 0">
-      <div x-for="postedItem in items" :key="postedItem.id" class="column is-one-third" style="padding: 10px;">
-        <div class="content">
-          <p class="title is-4" x-text="postedItem.name"></p>
-          <p><strong>Description:</strong> <span x-text="postedItem.description"></span></p>
-          <p><strong>Keywords:</strong> <span x-text="postedItem.keywords"></span></p>
-          <p><strong>Log:</strong> <span x-text="postedItem.lon"></span></p>
-          <p><strong>Lat:</strong> <span x-text="postedItem.lat"></span></p>
-          <p><strong>ISO Date:</strong> <span x-text="postedItem.date_from"></span></p>
-          <button @click="deleteItem(postedItem.id)" class="button is-rounded is-danger">Delete</button>
+        <div class="column">
         </div>
       </div>
     </div>
   </section>
 
- 
-<script>
-  function submitForm() {
-    var name = document.getElementById("nameInput").value;
-    var description = document.getElementById("descriptionInput").value;
-    var keywords = document.getElementById("keywordsInput").value;
-    var lon = document.getElementById("lonInput").value;
-    var lat = document.getElementById("latInput").value;
+  <div class="posted-items section">
+    <h2 class="title is-3">Posted Items</h2>
+    <div id="postedItemsContainer" class="columns is-multiline">
+      <!-- Display posted items here -->
+    </div>
+    <footer class="footer">
+      <div class="content has-text-centered">
+        <p>
+          <strong>FreeCycle</strong> by <a href="https://jgthms.com">Andrew Wright</a>. Client developed in
+          <a href="https://vuejs.org/"> Vue.js</a> and
+          <a href="https://bulma.io/"> Bulma</a>.
+        </p>
+      </div>
+    </footer>
+  </div>
 
-    if (name.trim() === "" || description.trim() === "" || keywords.trim() === "" || lon.trim() === "" || lat.trim() === "") {
-      alert("Please fill in all required fields");
-      return;
+  <div class="container">
+    <h1 class="title">Your Client Title</h1>
+    <button id="fetchButton">Fetch Hello from Server</button>
+    <p id="result"></p>
+  </div>
+
+  <script>
+    const serverUrl = 'https://friendly-capybara-7j9g4x7qgg6fp5xq-8000.app.github.dev'; //????right??????
+
+    function toggleMenu() {
+      // do later get posting and returning working. Just paste this in from previous client
     }
 
-    var isoDate = new Date().toISOString();
+    function postForm(event) {
+      event.preventDefault();
 
-    alert("Item submitted successfully!");
+      const newItem = {
+        user_id: document.getElementById('user_id').value,
+        lat: document.getElementById('lat').value,
+        lon: document.getElementById('lon').value,
+        description: document.getElementById('description').value,
+        keywords: document.getElementById('keywords').value,
+      };
 
-    var newItem = {
-      name: name,
-      description: description,
-      keywords: keywords,
-      lon: lon,
-      lat: lat,
-      date_from: isoDate
-    };
+      fetch(`${serverUrl}/item`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newItem),
+      })
+        .then(response => response.json())
+        .then(json => {
+          console.log('Item added successfully:', json);
+          updatePostedItems(json.item);
+        })
+        .catch(err => console.error('Error adding item:', err));
 
-    items.unshift(newItem);
+      return false;
+    }
 
-    fetch('item', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(newItem),
-    })
-    .then(response => response.json())
-    .then(data => {
-      console.log('Server response:', data);
-    })
-    .catch(error => {
-      console.error('Error submitting item:', error);
-    });
+    function updatePostedItems(item) {
+  const postedItemsContainer = document.getElementById('postedItemsContainer');
+
+  if (postedItemsContainer.children.length % 3 === 0) {
+    const newColumn = document.createElement('div');
+    newColumn.classList.add('column');
+    postedItemsContainer.appendChild(newColumn);
   }
 
-  function deleteItem(itemId) {
-  
-    items = items.filter(item => item.id !== itemId);
-
-    
-    fetch(`item/${itemId}`, {
-      method: 'DELETE',
-    })
-    .then(response => {
-      if (response.ok) {
-        console.log(`Item with ID ${itemId} deleted successfully`);
-      } else {
-        console.error(`Error deleting item with ID ${itemId}`);
-      }
-    })
-    .catch(error => {
-      console.error('Error deleting item:', error);
-    });
+  if (item) {
+    const itemCard = document.createElement('div');
+    itemCard.classList.add('card');
+    itemCard.innerHTML = `<div class="card-content">
+                            <p>ID: ${item.id}</p>
+                            <p>User ID: ${item.user_id}</p>
+                            <p>Latitude: ${item.lat}</p>
+                            <p>Longitude: ${item.lon}</p>
+                            <p>Description: ${item.description}</p>
+                            <p>Keywords: ${item.keywords}</p>
+                          </div>`;
+    const lastColumn = postedItemsContainer.lastElementChild;
+    lastColumn.appendChild(itemCard);
+  } else {
+    console.error('Error adding item: Received invalid data from the server');
   }
-</script>
+}
+    document.getElementById('fetchButton').addEventListener('click', () => {
+      fetch(`${serverUrl}/hello`)
+        .then(response => response.text())
+        .then(data => {
+          document.getElementById('result').innerText = data;
+        })
+        .catch(error => console.error('Error fetching data:', error));
+    });
+  </script>
+  <script src="scripts.js"></script>
+</body>
+
+</html>

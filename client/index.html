@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FreeCycle</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+  <script src="https://unpkg.com/vue@3"></script>
+</head>
+
+<body>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const app = Vue.createApp({
+        data() {
+          return {
+            isMenuOpen: false,
+            newItem: {
+              user_id: '',
+              keywords: '',
+              description: '',
+              lat: '',
+              lon: ''
+            },
+            apiEndpoint: '/item',
+            items: [],
+          };
+        },
+        methods: {
+          toggleMenu() {
+            this.isMenuOpen = !this.isMenuOpen;
+          },
+          clearForm() {
+            for (const key in this.newItem) {
+              this.newItem[key] = '';
+            }
+          },
+          postForm() {
+            if (!this.newItem.user_id || !this.newItem.keywords || !this.newItem.description || !this.newItem.lat || !this.newItem.lon) {
+              console.error('Please fill in all required fields');
+              return;
+            }
+
+            // POST request to API
+            fetch(this.apiEndpoint, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(this.newItem),
+              })
+              .then(response => response.json())
+              .then(json => {
+                console.log('Item added successfully:', json);
+                this.clearForm();
+                this.items.unshift(json);
+              })
+              .catch(err => console.error('Error adding item:', err));
+          },
+          deleteItem(itemId) {
+            fetch(`${this.apiEndpoint}/${itemId}`, {
+                method: 'DELETE',
+              })
+              .then(response => {
+                if (response.ok) {
+                  this.items = this.items.filter(item => item.id !== itemId);
+                } else {
+                  console.error(`Error deleting item with ID ${itemId}`);
+                }
+              })
+              .catch(err => console.error('Error deleting item:', err));
+          },
+        },
+      });
+
+      app.mount('#app');
+    });
+  </script>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
+      }
+    }
+  </script>
+
+  <div id="app">
+    <nav class="navbar has-shadow is-white">
+      <div class="navbar-brand">
+        <a class="navbar-item">
+          <img src="/assets/recycling-symbol.webp" alt="site logo" style="max-height: 70px" class="py-2 px-2">
+        </a>
+        <button @click="toggleMenu" class="navbar-burger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+
+      <div class="navbar-menu" :class="{ 'is-active': isMenuOpen }">
+        <div class="navbar-end">
+          <a class="navbar-item">My Account</a>
+          <a class="navbar-item">Help</a>
+          <a class="navbar-item">About us</a>
+        </div>
+      </div>
+    </nav>
+
+    <section class="section">
+      <div class="container">
+        <div class="columns">
+          <div class="column">
+            <div class="comment-box">
+              <form @submit.prevent="postForm" class="myForm">
+                <div class="field">
+                  <label class="label">Name</label>
+                  <div class="control">
+                    <input v-model="newItem.user_id" name="user_id" class="input is-rounded" type="text" :placeholder="'e.g. Andrew Wright'" />
+                  </div>
+                </div>
+                
+                <div class="field">
+                  <label class="label">Lat</label>
+                  <div class="control">
+                    <input v-model="newItem.lat" name="lat" class="input is-rounded" type="number" :placeholder="'e.g. 145'" />
+                  </div>
+                </div>
+                
+                <div class="field">
+                  <label class="label">Lon</label>
+                  <div class="control">
+                    <input v-model="newItem.lon" name="lon" class="input is-rounded" type="number" :placeholder="'e.g. 145'" />
+                  </div>
+                </div>
+                
+                <div class="field">
+                  <label class="label">Description</label>
+                  <div class="control">
+                    <input v-model="newItem.description" name="description" class="input is-rounded" type="text" :placeholder="'e.g. white'" />
+                  </div>
+                </div>
+                
+                <div class="field">
+                  <label class="label">Keywords</label>
+                  <div class="control">
+                    <input v-model="newItem.keywords" name="keywords" class="input is-rounded" type="text" :placeholder="'e.g. hammer'" />
+                  </div>
+                </div>
+                
+                <div class="field">
+                  <div class="control">
+                    <button type="submit" class="button is-rounded" data-action="create_item">Add Item</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="column">
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="posted-items section">
+      <h2 class="title is-3">Posted Items</h2>
+      <div class="columns is-multiline">
+        <div class="column is-one-third" v-for="postedItem in items" :key="postedItem.id">
+          <div class="card">
+            <div class="card-content">
+              <p class="title is-4 has-text-info has-text-outlined">ID: {{ postedItem.id }}</p>
+              <p><strong>User ID:</strong> {{ postedItem.user_id }}</p>
+              <p><strong>Keywords:</strong> {{ postedItem.keywords }}</p>
+              <p><strong>Description:</strong> {{ postedItem.description }}</p>
+              <p><strong>Latitude:</strong> {{ postedItem.lat }}</p>
+              <p><strong>Longitude:</strong> {{ postedItem.lon }}</p>
+              <p><strong>Date:</strong> {{ postedItem.date_from }}</p>
+            </div>
+            <footer class="card-footer">
+              <a @click="deleteItem(postedItem.id)" class="card-footer-item has-text-danger">Delete</a>
+            </footer>
+          </div>
+        </div>
+      </div>
+      <footer class="footer">
+        <div class="content has-text-centered ">
+          <p>
+            <strong>FreeCycle</strong> by <a href="https://jgthms.com">Andrew Wright</a>. Client developed in
+            <a href="https://vuejs.org/"> Vue.js</a> and
+        <a href="https://bulma.io/"> Bulma</a>.
+      </p>
+    </div>
+  </footer>
+</div>
+</body>
+</html>

@@ -1,16 +1,13 @@
-ARG PERL_VERSION=5.34
-FROM perl:${PERL_VERSION}
+FROM node
 
 WORKDIR /app/
 
-RUN cpan Mojolicious::Lite
-RUN cpan Mojolicious::Plugin::SecureCORS
-RUN cpan JSON
+COPY package.json .
 
-COPY app.pl .
+COPY . .
+
+RUN npm install express
 
 EXPOSE 8000
 
-CMD ["morbo", "app.pl", "--listen", "http://0.0.0.0:8000"]
-
-
+CMD ["node", "app.js"]

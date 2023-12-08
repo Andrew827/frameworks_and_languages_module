@@ -4,15 +4,18 @@ const port = 8000;
 const cors = require('cors');
 const path = require('path');
 
-app.use(cors());
+app.use(cors({ origin: '*' }));
 app.use(express.json());
+
+
+app.use(express.static(path.join(__dirname, 'client')));
 
 const items = {};
 let nextID = 1;
 
 function item(user_id, keywords, description, lat, lon) {
   const id = nextID++;
-  const date_from = new Date().toISOString(); 
+  const date_from = new Date().toISOString();
   const newItem = {
     id,
     user_id,
@@ -40,15 +43,21 @@ function removeItem(id) {
       });
     });
 
-    return true; 
+    return true;
   }
 
-  return false; 
+  return false;
 }
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
 });
+
+app.get('/hello', (req, res) => {
+  res.status(200).json({ message: 'Hello from the server!' });
+});
+
+
 
 app.get('/items', (req, res) => {
   const allItems = Object.values(items).flat();

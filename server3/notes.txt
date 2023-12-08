@@ -29,14 +29,6 @@ curl -X POST -H "Content-Type: application/json" -d '{"user_id":"567", "keywords
 curl -X DELETE http://localhost:8000/item/2
 
 
-get '/' => sub {
-    my $c = shift;
-
-    my $api_param = $c->param('api') // '/api/v1';
-  
-    $api_param =~ s{/$}{}; 
-
-    $c->render(text => "API: $api_param");
+get '/' => sub ($c) {
+    $c->reply->file('../client/index.html'); # get hmtl from client dir
 };
-
-#  PERL_VERSION=5.34
