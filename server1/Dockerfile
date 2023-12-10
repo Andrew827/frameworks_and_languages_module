@@ -5,7 +5,12 @@ WORKDIR /app/
 
 RUN cpan Mojolicious::Lite
 
+RUN cpanm Mojolicious::Plugin::SecureCORS
+
+RUN cpan install Mojolicious File::Spec
+
 RUN cpan JSON
+
 
 COPY app.pl .
 

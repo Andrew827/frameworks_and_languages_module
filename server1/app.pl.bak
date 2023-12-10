@@ -2,26 +2,15 @@ use Mojolicious::Lite -signatures;
 use Mojo::Date;
 use List::Util qw(first);
 use Mojolicious::Plugin::SecureCORS;
-use File::Spec;
 
-app->hook(
-    before_dispatch => sub ($c) {
-        $c->res->headers->header( 'Access-Control-Allow-Origin' => '*' );
-        $c->res->headers->header( 'Access-Control-Allow-Methods' =>
-              'GET, POST, PUT, DELETE, OPTIONS' );
-        $c->res->headers->header(
-            'Access-Control-Allow-Headers' => 'Content-Type' );
-        $c->res->headers->header( 'Access-Control-Max-Age' => '3600' );
-    }
-);
+app->hook(before_dispatch => sub ($c) {
+    $c->res->headers->header('Access-Control-Allow-Origin' => '*');
+    $c->res->headers->header('Access-Control-Allow-Methods' => 'GET, POST, PUT, DELETE, OPTIONS');
+    $c->res->headers->header('Access-Control-Allow-Headers' => 'Content-Type');
+    $c->res->headers->header('Access-Control-Max-Age' => '3600');
+});
 
-get '/' => sub {
-    my $c = shift;
-    my $file_path = $c->app->home->rel_file('index.html');
-    $c->reply->file($file_path);
-};
-
-app->config( hypnotoad => { listen => ['http://*:8000'] } );
+app->config(hypnotoad => {listen => ['http://*:8000']});
 
 my %items;
 my $next_id = 1;
@@ -31,21 +20,13 @@ sub iso_datetime {
 }
 
 get '/' => sub ($c) {
-    $c->render( text => 'Server - Framework Moja' );
+    $c->render(text => 'Server - Framework Moja');
 };
 
 post '/item' => sub ($c) {
     my $params = $c->req->json;
-    unless ( $params->{user_id}
-        && $params->{keywords}
-        && $params->{description}
-        && $params->{lat}
-        && $params->{lon} )
-    {
-        return $c->render(
-            json   => { error => 'Missing required fields' },
-            status => 405
-        );
+    unless ($params->{user_id} && $params->{keywords} && $params->{description} && $params->{lat} && $params->{lon}) {
+        return $c->render(json => { error => 'Missing required fields' }, status => 405);
     }
 
     my $new_item = {
@@ -55,11 +36,11 @@ post '/item' => sub ($c) {
         description => $params->{description},
         lat         => $params->{lat},
         lon         => $params->{lon},
-        date_from   => iso_datetime(),
+        date_from   => iso_datetime(),  
     };
 
-    push @{ $items{ $new_item->{id} } }, $new_item;
-    $c->render( json => $new_item, status => 201 );
+    push @{$items{$new_item->{id}}}, $new_item;
+    $c->render(json => $new_item, status => 201);
 };
 
 # Test failure due to output being in a different format. Sorting alg needed, this way it should pass the test.
@@ -68,9 +49,12 @@ get '/items' => sub ($c) {
 
     my @all_items = map { @$_ } values %items;
 
+
     my @desired_order = qw(id user_id keywords description lat lon date_from);
 
+
     my @sorted_items = sort { $a->{id} <=> $b->{id} } @all_items;
+
 
     my @formatted_items = map {
         my %formatted_item;
@@ -78,29 +62,30 @@ get '/items' => sub ($c) {
         \%formatted_item;
     } @sorted_items;
 
-    $c->render( json => \@formatted_items, status => 200 );
+    $c->render(json => \@formatted_items, status => 200);
 };
+
 
 get '/item/:id' => sub ($c) {
     my $id   = $c->stash('id');
     my $item = first { $_->{id} == $id } map { @$_ } values %items;
 
     if ($item) {
-        $c->render( json => $item, status => 200 );
-    }
-    else {
-        $c->render( json => { error => 'Item not found' }, status => 404 );
+        $c->render(json => $item, status => 200);
+    } else {
+        $c->render(json => { error => 'Item not found' }, status => 404);
     }
 };
 
 get '/items' => sub ($c) {
-    my @all_items    = map  { @$_ } values %items;
+    my @all_items = map { @$_ } values %items;
     my @sorted_items = sort { $a->{id} <=> $b->{id} } @all_items;
 
     my @formatted_items = map { format_item($_) } @sorted_items;
 
-    $c->render( json => \@formatted_items, status => 200 );
+    $c->render(json => \@formatted_items, status => 200);
 };
+
 
 sub format_item {
     my ($item) = @_;
@@ -116,9 +101,8 @@ del '/item/:id' => sub ($c) {
 
     if ($deleted) {
         $c->rendered(204);
-    }
-    else {
-        $c->render( json => { error => 'Item not found' }, status => 404 );
+    } else {
+        $c->render(json => { error => 'Item not found' }, status => 404);
     }
 };
 
@@ -130,16 +114,17 @@ options '/item' => sub ($c) {
     $c->rendered(405);
 };
 
+
 sub remove_item ($id) {
-    if ( exists $items{$id} ) {
+    if (exists $items{$id}) {
         delete $items{$id};
         my $index = 1;
-        for my $key ( keys %items ) {
-            $_->{id} = $index++ for @{ $items{$key} };
+        for my $key (keys %items) {
+            $_->{id} = $index++ for @{$items{$key}};
         }
         return 1;
     }
     return 0;
 }
 
-app->start( 'daemon', '-l', 'http://localhost:8000' );
+app->start('daemon', '-l', 'http://localhost:8000');

@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      .custom-background-blue {
+        background-color: #3490dc;
+      }
+
+      .custom-background-green {
+        background-color: #c6f6d5;
+      }
+
+      .custom-background-yellow {
+        background-color: #fffbea;
+      }
+
+      .resizable-container {
+        max-width: 100%;
+        margin: 0 auto;
+      }
+    </style>
+  </head>
+  <body class="bg-custom-background-blue">
+    <section class="section py-6 custom-background-green">
+      <div class="container has-text-centered">
+        <h2 class="title is-2 has-text-white">
+          Welcome to your Mojolicious Server
+        </h2>
+      </div>
+    </section>
+
+    <section class="section py-6 custom-background-yellow">
+      <div class="container">
+        <h2 class="title is-4 has-text-weight-bold mb-4">
+          Subtitle: Curl Commands to Interact with This Server
+        </h2>
+        <p>Get Hello from the server: curl http://localhost:8000/hello</p>
+        <p>
+          Post an item to the server: curl -X POST -H "Content-Type:
+          application/json" -d '{"user_id": "user123", "keywords": "key1,key2",
+          "description": "Item description", "lat": 37.7749, "lon": -122.4194}'
+          http://localhost:8000/item
+        </p>
+        <p>Get items back from the server: curl http://localhost:8000/items</p>
+        <p>
+          Get items by user name: curl http://localhost:8000/items/user/user123
+        </p>
+      </div>
+    </section>
+
+    <section class="section py-6 custom-background-green">
+      <div class="container">
+        <h2 class="title is-4 has-text-weight-bold mb-4">
+          API Specification - Copy and paste this into
+          <a href="https://editor.swagger.io/">Swagger</a>
+        </h2>
+
+        # https://swagger.io/specification/ openapi: '3.0.2' info: title:
+        FreeCycle version: '0.1' description: | FreeCycle your old stuff - keep
+        things out of landfill # Introduction * Help the poor * Climate crisis *
+        Right to repair # Future ideas This is currently a REST API. A trivial
+        bridge could be created to make this work with SMS. # Authentication As
+        this is a service created as a learning activity, there is no security
+        or authentication. tags: - name: item description: An item that is
+        advertised #- name: item_model # x-displayName: The item model #
+        description: | #
+        <SchemaDefinition schemaRef="#/components/schemas/Item" /> - name: root
+        description: root resources x-tagGroups: - name: General tags: - item -
+        root #- name: Models # tags: # - item_model servers: - url:
+        //api.server.test/v1 description: The deployed url of the api. Currently
+        it is not hosted externally. ## TODO CORS headers paths: '/': get: tags:
+        - root summary: Human readable html 'hello' page description: Used for a
+        human to known the service is working operationId: root responses:
+        '200': description: OK content: text/html: example:
+        <html>
+          <body>
+            Your HTML text
+          </body>
+        </html>
+
+        options: summary: CORS support description: | Enable CORS by returning
+        correct headers tags: - root responses: 204: description: Default
+        response for CORS method headers: Access-Control-Allow-Origin: schema:
+        type: string example: "*" Access-Control-Allow-Methods: schema: type:
+        string example: "POST, GET, OPTIONS, DELETE"
+        #Access-Control-Allow-Headers: # schema: # type: string # example:
+        Content-Type content: {} '/item/': post: tags: - item summary: Add a new
+        item description: Add a new item with geo-position that is available
+        operationId: addItem requestBody: $ref:
+        '#/components/requestBodies/ItemCreate' responses: '201': description:
+        Item created successfully content: application/json: schema: $ref:
+        '#/components/schemas/Item' '405': description: Invalid input - some
+        input fields may be missing '/item/{itemId}/': parameters: - name:
+        itemId in: path description: ID of item to return required: true
+        #deprecated: true schema: $ref: '#/components/schemas/Id' get: tags: -
+        item summary: Single item by ID description: Returns a single item
+        operationId: getItemById responses: '200': description: successful
+        operation content: application/json: schema: $ref:
+        '#/components/schemas/Item' '404': description: Item not found delete:
+        tags: - item summary: Remove an item description: Remove an item by
+        itemID operationId: deleteItem responses: 404: description: Item not
+        found 204: description: Ok content: {} '/items/': parameters: - name:
+        user_id in: query description: The user the item was created by style:
+        form schema: type: string - name: keywords in: query description: A list
+        of keywords that must all be present style: form schema: type: array
+        items: type: string - name: lat in: query description: Latitude style:
+        form schema: type: number format: double - name: lon in: query
+        description: Longitude style: form schema: type: number format: double -
+        name: radius in: query description: Radius from lat/lon default is 5?
+        style: form schema: type: number format: double - name: date_from in:
+        query description: Item was available from style: form schema: type:
+        string format: date-time - name: date_to in: query description: Item was
+        available to. Default is NOW style: form schema: type: string format:
+        date-time get: tags: - item operationId: findItemsByQuery summary: List
+        multiple items description: Get a list of all items or optionally filter
+        from query string criteria. This needs to be improved to support
+        pagination in future. responses: '200': description: get list of items
+        matching query content: application/json: schema: type: array items:
+        $ref: '#/components/schemas/Item' #maxItems: 10 #TODO: consider
+        pagination? # '/keywords/': # get: # tags: # - keywords # operationId:
+        getKeywords # summary: gets a list of all the keywords currently in use
+        in the system across all Items # responses: # '200': # description:
+        keyword list # content: # application/json: # schema: # $ref:
+        '#/components/schemas/Keywords' components: examples: Item: value: id:
+        1234 # incomplete requestBodies: ItemCreate: content: application/json:
+        schema: allOf: - $ref: '#/components/schemas/ItemCreate' description: A
+        subset of item fields to create an Item object. dates and item_id will
+        be populated/generated automatically on creation. required: true
+        schemas: Id: type: integer format: int64 readOnly: true Location: type:
+        object properties: lat: type: number format: double example: 51.2798438
+        lon: type: number format: double example: 1.0830275 DateRange: type:
+        object properties: date_from: type: string format: date-time date_to:
+        type: string format: date-time Keywords: description: list of keywords
+        type: array items: type: string example: ["hammer", "nails", "tools"]
+        ItemCreate: required: - user_id - keywords - description - lat - lon
+        allOf: - type: object properties: user_id: description: User ID type:
+        string example: "user1234" keywords: $ref:
+        '#/components/schemas/Keywords' description: type: string example: "A
+        hammer and nails set" image: type: string description: A URL or a BASE64
+        encoded image example: https://placekitten.com/200/300 - $ref:
+        '#/components/schemas/Location' Item: required: - date_from - id allOf:
+        - type: object properties: id: description: Item ID allOf: - $ref:
+        '#/components/schemas/Id' - $ref: '#/components/schemas/ItemCreate' -
+        $ref: '#/components/schemas/DateRange'
+      </div>
+    </section>
+  </body>
+</html>

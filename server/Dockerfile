@@ -12,7 +12,6 @@ RUN npm install geolib
 
 RUN npm install tailwindcss
 
-
 EXPOSE 8000
 
 CMD ["node", "app.js"]

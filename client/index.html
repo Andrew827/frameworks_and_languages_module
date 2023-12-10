@@ -3,57 +3,11 @@
 
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>FreeCycle</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css" />
+  <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
-  <style>
-            nav {
-            background-color: #333;
-        }
-
-        nav ul {
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-        }
-
-        nav li {
-            float: left;
-        }
-
-        nav a {
-            display: block;
-            color: white;
-            text-align: center;
-            padding: 14px 16px;
-            text-decoration: none;
-        }
-
-        nav a:hover {
-            background-color: #ddd;
-            color: black;
-        }
-
-        footer {
-    background-color: #333;
-    color: white;
-    padding: 20px 0;
-    text-align: center;
-}
-
-footer p {
-    margin: 0;
-}
-
-        
-    </style>
-  </style>
-</head>
-
-<body x-data="setup()">
-
   <script>
     function setup() {
       const DEFAULT_API = 'https://friendly-capybara-7j9g4x7qgg6fp5xq-8000.app.github.dev/';
@@ -131,111 +85,96 @@ footer p {
       };
     }
   </script>
+</head>
 
-  <nav class="navbar has-shadow is-white">
-    <div class="navbar-brand">
-      <a class="navbar-item">
+<body x-data="setup()">
+
+  <nav class="bg-gray-800 text-white">
+    <div class="container mx-auto flex items-center justify-between py-4">
+      <a class="text-white">
         <img src="Icon.webp" alt="site logo" style="max-height: 70px" class="py-2 px-2" />
       </a>
-    </div>
 
-    <div class="navbar-menu" :class="{ 'is-active': isMenuOpen }">
-      <div class="navbar-end">
-        <a class="navbar-item">My Account</a>
-        <a class="navbar-item">Help</a>
-        <a class="navbar-item">About us</a>
+      <div class="hidden sm:block">
+        <a class="text-white px-4">My Account</a>
+        <a class="text-white px-4">Help</a>
+        <a class="text-white px-4">About us</a>
       </div>
     </div>
   </nav>
 
-  <section class="section is-fullwidth">
-    <div class="container">
-          <div class="comment-box">
-            <form @submit.prevent="postForm" class="myForm">
-              <div class="field">
-                <label class="label">Name</label>
-                <div class="control">
-                  <input x-model="newItem.user_id" name="user_id" type="text" :placeholder="'e.g. Andrew Wright'" />
-                </div>
-              </div>
-
-              <div class="field">
-                <label class="label">Lat</label>
-                <div class="control">
-                  <input x-model="newItem.lat" name="lat" type="number" :placeholder="'e.g. 145'" />
-                </div>
-              </div>
-
-              <div class="field">
-                <label class="label">Lon</label>
-                <div class="control">
-                  <input x-model="newItem.lon" name="lon"  type="number" :placeholder="'e.g. 145'" />
-                </div>
-              </div>
-
-              <div class="field">
-                <label class="label">Description</label>
-                <div class="control">
-                  <input x-model="newItem.description" name="description" type="text" :placeholder="'e.g. white'" />
-                </div>
-              </div>
-
-              <div class="field">
-                <label class="label">Keywords</label>
-                <div class="control">
-                  <input x-model="newItem.keywords" name="keywords" type="text" :placeholder="'e.g. hammer'" />
-                </div>
-              </div>
-
-              <div class="field">
-                <label class="label">Image</label>
-                <div class="control">
-                  <input x-model="newItem.image" name="image" type="text" :placeholder="'e.g. image-url.jpg'" />
-                </div>
-              </div>
-
-              <div class="field">
-                <div class="control">
-                  <button type="submit"  data-action="create_item">Add Item</button>
-                </div>
-              </div>
-            </form>
+  <section class="bg-gray-100 py-8">
+    <div class="container mx-auto">
+      <div class="comment-box">
+        <form @submit.prevent="postForm" class="myForm">
+          <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2">Name</label>
+            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" x-model="newItem.user_id" name="user_id" type="text" :placeholder="'e.g. Andrew Wright'" />
           </div>
+
+          <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2">Lat</label>
+            <input x-model="newItem.lat" name="lat" type="number" :placeholder="'e.g. 145'" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+          </div>
+
+          <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2">Lon</label>
+            <input x-model="newItem.lon" name="lon" type="number" :placeholder="'e.g. 145'" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+          </div>
+
+          <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2">Description</label>
+            <input x-model="newItem.description" name="description" type="text" :placeholder="'e.g. white'" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+          </div>
+
+          <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2">Keywords</label>
+            <input x-model="newItem.keywords" name="keywords" type="text" :placeholder="'e.g. hammer'" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+          </div>
+
+          <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2">Image</label>
+            <input x-model="newItem.image" name="image" type="text" :placeholder="'e.g. image-url.jpg'" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+          </div>
+
+          <div class="mb-4">
+            <button type="submit" data-action="create_item" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Add Item</button>
+          </div>
+        </form>
+      </div>
     </div>
   </section>
 
-  <section class="section">
-    <div class="container">
-      <h2 class="title is-3">Posted Items</h2>
-      <ul class="columns is-multiline">
+  <section class="py-8">
+    <div class="container mx-auto">
+      <h2 class="text-3xl font-bold mb-6">Posted Items</h2>
+      <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
         <template x-for="postedItem in items" :key="postedItem.id">
-          <li class="column is-one-third">
-            <div class="card">
-              <div class="card-content">
-                <p class="title is-4 has-text-info has-text-outlined">
-                  ID: <span x-text="postedItem.id"></span>
-                </p>
-                <div class="card-title h4">
-                  <span data-field="user_id">User ID: <span x-text="postedItem.user_id"></span></span>
-                </div>
-                <div class="card-text h5">
-                  <span data-field="image">Image: <span x-text="postedItem.image"></span></span>
-                </div>
-                <div class="card-text h5">
-                  <span data-field="keywords">Keywords: <span x-text="postedItem.keywords"></span></span>
-                </div>
-                <div class="card-text text-body-secondary">
-                  <span data-field="description">Description: <span x-text="postedItem.description"></span></span>
-                </div>
-                <div class="card-text h5 text-body-secondary">
-                  <span data-field="lat">Latitude: <span x-text="postedItem.lat"></span></span>
-                </div>
-                <div class="card-text h5 text-body-secondary">
-                  <span data-field="lon">Longitude: <span x-text="postedItem.lon"></span></span>
-                </div>
+          <li>
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+              <p class="text-xl text-blue-500 font-bold mb-4">
+                ID: <span x-text="postedItem.id"></span>
+              </p>
+              <div class="mb-2">
+                <span data-field="user_id">User ID: <span x-text="postedItem.user_id"></span></span>
               </div>
-              <footer class="card-footer">
-                <a @click="deleteItem(postedItem.id)" data-action="delete" class="card-footer-item has-text-danger">Delete</a>
+              <div class="mb-2">
+                <span data-field="image">Image: <span x-text="postedItem.image"></span></span>
+              </div>
+              <div class="mb-2">
+                <span data-field="keywords">Keywords: <span x-text="postedItem.keywords"></span></span>
+              </div>
+              <div class="mb-2">
+                <span data-field="description">Description: <span x-text="postedItem.description"></span></span>
+              </div>
+              <div class="mb-2">
+                <span data-field="lat">Latitude: <span x-text="postedItem.lat"></span></span>
+              </div>
+              <div class="mb-2">
+                <span data-field="lon">Longitude: <span x-text="postedItem.lon"></span></span>
+              </div>
+              <footer class="mb-2">
+                <a @click="deleteItem(postedItem.id)" data-action="delete" class="text-red-500 hover:underline">Delete</a>
               </footer>
             </div>
           </li>
@@ -244,12 +183,12 @@ footer p {
     </div>
   </section>
 
-  <footer class="footer">
-    <div class="content has-text-centered">
+  <footer class="bg-gray-800 text-white py-6">
+    <div class="container mx-auto text-center">
       <p>
         <strong>FreeCycle</strong> by <a href="https://jgthms.com">Andrew Wright</a>. Client developed in
         <a href="https://alpinejs.dev/"> Alpine.js</a> and
-        <a href="https://getskeleton.com/"> Skeleton</a>.
+        <a href="https://tailwindcss.com/"> Tailwind CSS</a>.
       </p>
     </div>
   </footer>

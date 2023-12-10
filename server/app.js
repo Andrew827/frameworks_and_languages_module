@@ -8,11 +8,11 @@ const geolib = require('geolib') //Filtering for location
 app.use(cors({ origin: '*' }))
 app.use(express.json())
 
-app.use(express.static(__dirname));
+app.use(express.static(__dirname))
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
-});
+  res.sendFile(path.join(__dirname, 'index.html'))
+})
 
 const items = {}
 let nextID = 1
@@ -77,15 +77,9 @@ app.post('/item', (req, res) => {
   }
 })
 
-app.get('/items/user/:user_id', (req, res) => {
+app.get('/items/:user_id', (req, res) => {
   const user_id = req.params.user_id
   const filteredItems = filterItemsByUser(user_id)
-  res.status(200).json(filteredItems)
-})
-
-app.get('/items/keywords/:keywords', (req, res) => {
-  const keywords = req.params.keywords.split(',')
-  const filteredItems = filterItemsByKeywords(keywords)
   res.status(200).json(filteredItems)
 })
 
@@ -106,12 +100,6 @@ app.get('/item/:id', (req, res) => {
   }
 })
 
-app.get('/items/date/:date', (req, res) => {
-  const date = new Date(req.params.date)
-  const filteredItems = filterItemsByDate(date)
-  res.status(200).json(filteredItems)
-})
-
 app.delete('/item/:id', (req, res) => {
   const id = parseInt(req.params.id)
   const deleted = removeItem(id)
@@ -123,10 +111,16 @@ app.delete('/item/:id', (req, res) => {
   }
 })
 
+function getItemById(id) {
+  return Object.values(items)
+    .flat()
+    .find((item) => item.id === id)
+}
+
 function filterItemsByUser(user_id) {
   return Object.values(items)
     .flat()
-    .filter((item) => item.user_id === user_id)
+    .find((item) => item.user_id === user_id)
 }
 
 function filterItemsByKeywords(keywords) {
@@ -145,12 +139,6 @@ function filterItemsByLocation(lat, lon, radius) {
       const distance = geolib.getDistance(center, itemLocation)
       return distance <= radius
     })
-}
-
-function getItemById(id) {
-  return Object.values(items)
-    .flat()
-    .find((item) => item.id === id)
 }
 
 app.listen(port, () => {
