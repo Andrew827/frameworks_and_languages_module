@@ -1,184 +1,280 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FreeCycle</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css" />
+    <script src="https://unpkg.com/vue@3"></script>
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
-  <title>Your Client Title</title>
-</head>
+  <body>
+    <script>
+      const DEFAULT_API = 'https://friendly-capybara-7j9g4x7qgg6fp5xq-8000.app.github.dev/'
+      const urlParams = new URLSearchParams(window.location.search)
+      const serverUrl = (urlParams.get('api') || DEFAULT_API).replace(/\/$/, '')
 
-<body>
-  <nav class="navbar has-shadow is-white">
-    <div class="navbar-brand">
-      <a class="navbar-item">
-        <img src="/assets/recycling-symbol.webp" alt="site logo" style="max-height: 70px" class="py-2 px-2">
-      </a>
-      <button @click="toggleMenu" class="navbar-burger">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
-    </div>
+      document.addEventListener('DOMContentLoaded', function () {
+        const app = Vue.createApp({
+          data() {
+            return {
+              isMenuOpen: false,
+              newItem: {
+                user_id: '',
+                keywords: '',
+                description: '',
+                lat: '',
+                lon: '',
+                image: '',
+              },
+              items: [],
+            };
+          },
+          methods: {
+            toggleMenu() {
+              this.isMenuOpen = !this.isMenuOpen;
+            },
+            clearForm() {
+              for (const key in this.newItem) {
+                this.newItem[key] = '';
+              }
+            },
+            postForm() {
+  if (
+    !this.newItem.user_id ||
+    !this.newItem.keywords ||
+    !this.newItem.description ||
+    !this.newItem.lat ||
+    !this.newItem.lon ||
+    !this.newItem.image
+  ) {
+    console.error('Please fill in all required fields');
+    return;
+  }
 
-    <div class="navbar-menu" :class="{ 'is-active': isMenuOpen }">
-      <div class="navbar-end">
-        <a class="navbar-item">My Account</a>
-        <a class="navbar-item">Help</a>
-        <a class="navbar-item">About us</a>
-      </div>
-    </div>
-  </nav>
+  fetch(`${serverUrl}/item`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(this.newItem),
+  })
+    .then((response) => response.json())
+    .then((json) => {
+      console.log('Item added successfully:', json);
+      this.clearForm();
+      this.items.unshift(json);
+    })
+    .catch((err) => {
+      console.error('Error adding item:', err);
+    });
+},
 
-  <section class="section">
-    <div class="container">
-      <div class="columns">
-        <div class="column">
-          <div class="comment-box">
-            <form id="myForm" class="myForm" onsubmit="return postForm(event);">
-              <div class="field">
-                <label class="label">Name</label>
-                <div class="control">
-                  <input id="user_id" class="input is-rounded" type="text" :placeholder="'e.g. Andrew Wright'" />
-                </div>
-              </div>
+deleteItem(id) {
+          //console.log(this.item)
+          fetch(`${serverUrl}/item/${id}`, {
+              method: 'DELETE',
+          })
+          .then(json => console.log('deleteItem()', json))
+          .then(() => this.getItems())
+          .catch(err => console.error(err));
+        },
+      
+            getItems() {
+              fetch(`${serverUrl}/items`, {
+                method: 'GET',
+              })
+                .then((response) => response.json())
+                .then((json) => {
+                  console.log('Getting Items!', json);
+                  this.items = [...json];
+                })
+                .catch((err) => console.error(err));
+            },
+          },
+        });
 
-              <div class="field">
-                <label class="label">Lat</label>
-                <div class="control">
-                  <input id="lat" class="input is-rounded" type="number" :placeholder="'e.g. 145'" />
-                </div>
-              </div>
+        app.mount('#app');
+      });
+    </script>
 
-              <div class="field">
-                <label class="label">Lon</label>
-                <div class="control">
-                  <input id="lon" class="input is-rounded" type="number" :placeholder="'e.g. 145'" />
-                </div>
-              </div>
+    <script type="importmap">
+      {
+        "imports": {
+          "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
+        }
+      }
+    </script>
 
-              <div class="field">
-                <label class="label">Description</label>
-                <div class="control">
-                  <input id="description" class="input is-rounded" type="text" :placeholder="'e.g. white'" />
-                </div>
-              </div>
+    <div id="app">
+      <nav class="navbar has-shadow is-white">
+        <div class="navbar-brand">
+          <a class="navbar-item">
+            <img src="Icon.webp" alt="site logo" style="max-height: 70px" class="py-2 px-2" />
+          </a>
+          <button @click="toggleMenu" class="navbar-burger">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+        </div>
 
-              <div class="field">
-                <label class="label">Keywords</label>
-                <div class="control">
-                  <input id="keywords" class="input is-rounded" type="text" :placeholder="'e.g. hammer'" />
-                </div>
-              </div>
-
-              <div class="field">
-                <div class="control">
-                  <button type="submit" class="button is-rounded">Add Item</button>
-                </div>
-              </div>
-            </form>
+        <div class="navbar-menu" :class="{ 'is-active': isMenuOpen }">
+          <div class="navbar-end">
+            <a class="navbar-item">My Account</a>
+            <a class="navbar-item">Help</a>
+            <a class="navbar-item">About us</a>
           </div>
         </div>
-        <div class="column">
+      </nav>
+
+      <section class="section">
+        <div class="container">
+          <div class="columns">
+            <div class="column">
+              <div class="comment-box">
+                <form @submit.prevent="postForm" class="myForm">
+                  <div class="field">
+                    <label class="label">Name</label>
+                    <div class="control">
+                      <input
+                        v-model="newItem.user_id"
+                        name="user_id"
+                        class="input is-rounded"
+                        type="text"
+                        :placeholder="'e.g. Andrew Wright'"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="field">
+                    <label class="label">Lat</label>
+                    <div class="control">
+                      <input
+                        v-model="newItem.lat"
+                        name="lat"
+                        class="input is-rounded"
+                        type="number"
+                        :placeholder="'e.g. 145'"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="field">
+                    <label class="label">Lon</label>
+                    <div class="control">
+                      <input
+                        v-model="newItem.lon"
+                        name="lon"
+                        class="input is-rounded"
+                        type="number"
+                        :placeholder="'e.g. 145'"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="field">
+                    <label class="label">Description</label>
+                    <div class="control">
+                      <input
+                        v-model="newItem.description"
+                        name="description"
+                        class="input is-rounded"
+                        type="text"
+                        :placeholder="'e.g. white'"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="field">
+                    <label class="label">Keywords</label>
+                    <div class="control">
+                      <input
+                        v-model="newItem.keywords"
+                        name="keywords"
+                        class="input is-rounded"
+                        type="text"
+                        :placeholder="'e.g. hammer'"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="field">
+                    <label class="label">Image</label>
+                    <div class="control">
+                      <input
+                        v-model="newItem.image"
+                        name="image"
+                        class="input is-rounded"
+                        type="text"
+                        :placeholder="'e.g. image-url.jpg'"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="field">
+                    <div class="control">
+                      <button type="submit" class="button is-rounded" data-action="create_item">
+                        Add Item
+                      </button>
+                    </div>
+                  </div>
+                </form>
+          </div>
         </div>
-      </div>
-    </div>
-  </section>
+      </section>
 
-  <div class="posted-items section">
-    <h2 class="title is-3">Posted Items</h2>
-    <div id="postedItemsContainer" class="columns is-multiline">
-      <!-- Display posted items here -->
-    </div>
-    <footer class="footer">
-      <div class="content has-text-centered">
-        <p>
-          <strong>FreeCycle</strong> by <a href="https://jgthms.com">Andrew Wright</a>. Client developed in
-          <a href="https://vuejs.org/"> Vue.js</a> and
-          <a href="https://bulma.io/"> Bulma</a>.
-        </p>
-      </div>
-    </footer>
-  </div>
-
+<section class="section">
   <div class="container">
-    <h1 class="title">Your Client Title</h1>
-    <button id="fetchButton">Fetch Hello from Server</button>
-    <p id="result"></p>
+    <h2 class="title is-3">Posted Items</h2>
+    <ul class="columns is-multiline">
+      <li v-for="postedItem in items" :key="postedItem.id" class="column is-one-third">
+        <div class="card">
+          <div class="card-content">
+            <p class="title is-4 has-text-info has-text-outlined">
+              ID: {{ postedItem.id }}
+            </p>
+            <div class="card-title h4">
+              <span data-field="user_id">User ID: {{ postedItem.user_id }}</span>
+            </div>
+            <div class="card-text h5">
+              <span data-field="image">Image: {{ postedItem.image }}</span>
+            </div>
+            <div class="card-text h5">
+              <span data-field="keywords">Keywords: {{ postedItem.keywords }}</span>
+            </div>
+            <div class="card-text text-body-secondary">
+              <span data-field="description">Description: {{ postedItem.description }}</span>
+            </div>
+            <div class="card-text h5 text-body-secondary">
+              <span data-field="lat">Latitude: {{ postedItem.lat }}</span>
+            </div>
+            <div class="card-text h5 text-body-secondary">
+              <span data-field="lon">Longitude: {{ postedItem.lon }}</span>
+            </div>
+          </div>
+          <footer class="card-footer">
+            <a
+              @click="deleteItem(postedItem.id)"
+              data-action="delete"
+              class="card-footer-item has-text-danger"
+            >Delete</a>
+          </footer>
+        </div>
+      </li>
+    </ul>
   </div>
+</section>
 
-  <script>
-    const serverUrl = 'https://friendly-capybara-7j9g4x7qgg6fp5xq-8000.app.github.dev'; //????right??????
-
-    function toggleMenu() {
-      // do later get posting and returning working. Just paste this in from previous client
-    }
-
-    function postForm(event) {
-      event.preventDefault();
-
-      const newItem = {
-        user_id: document.getElementById('user_id').value,
-        lat: document.getElementById('lat').value,
-        lon: document.getElementById('lon').value,
-        description: document.getElementById('description').value,
-        keywords: document.getElementById('keywords').value,
-      };
-
-      fetch(`${serverUrl}/item`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newItem),
-      })
-        .then(response => response.json())
-        .then(json => {
-          console.log('Item added successfully:', json);
-          updatePostedItems(json.item);
-        })
-        .catch(err => console.error('Error adding item:', err));
-
-      return false;
-    }
-
-    function updatePostedItems(item) {
-  const postedItemsContainer = document.getElementById('postedItemsContainer');
-
-  if (postedItemsContainer.children.length % 3 === 0) {
-    const newColumn = document.createElement('div');
-    newColumn.classList.add('column');
-    postedItemsContainer.appendChild(newColumn);
-  }
-
-  if (item) {
-    const itemCard = document.createElement('div');
-    itemCard.classList.add('card');
-    itemCard.innerHTML = `<div class="card-content">
-                            <p>ID: ${item.id}</p>
-                            <p>User ID: ${item.user_id}</p>
-                            <p>Latitude: ${item.lat}</p>
-                            <p>Longitude: ${item.lon}</p>
-                            <p>Description: ${item.description}</p>
-                            <p>Keywords: ${item.keywords}</p>
-                          </div>`;
-    const lastColumn = postedItemsContainer.lastElementChild;
-    lastColumn.appendChild(itemCard);
-  } else {
-    console.error('Error adding item: Received invalid data from the server');
-  }
-}
-    document.getElementById('fetchButton').addEventListener('click', () => {
-      fetch(`${serverUrl}/hello`)
-        .then(response => response.text())
-        .then(data => {
-          document.getElementById('result').innerText = data;
-        })
-        .catch(error => console.error('Error fetching data:', error));
-    });
-  </script>
-  <script src="scripts.js"></script>
-</body>
-
+      <footer class="footer">
+        <div class="content has-text-centered">
+          <p>
+            <strong>FreeCycle</strong> by <a href="https://jgthms.com">Andrew Wright</a>. Client
+            developed in <a href="https://vuejs.org/"> Vue.js</a> and
+            <a href="https://bulma.io/"> Bulma</a>.
+          </p>
+        </div>
+      </footer>
+    </div>
+  </body>
 </html>
