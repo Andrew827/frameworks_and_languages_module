@@ -8,7 +8,11 @@ const geolib = require('geolib') //Filtering for location
 app.use(cors({ origin: '*' }))
 app.use(express.json())
 
-app.use(express.static(path.join(__dirname, 'client')))
+app.use(express.static(__dirname));
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
 
 const items = {}
 let nextID = 1
