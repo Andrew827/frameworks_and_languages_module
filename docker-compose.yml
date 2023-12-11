@@ -3,7 +3,7 @@ services:
   server:
     build:
      context: ./server/
-     # context: ./server/
+     # context: ./server1/
     expose:
       - 8000
     ports:
@@ -12,7 +12,7 @@ services:
 
   client:
     build:
-      context: ./client2/
+      context: ./client/
       # context: ./client2/
     expose:
       - 8001

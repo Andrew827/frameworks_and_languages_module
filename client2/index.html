@@ -10,7 +10,7 @@
 
   <body>
     <script>
-      const DEFAULT_API = 'https://friendly-capybara-7j9g4x7qgg6fp5xq-8000.app.github.dev/'
+      const DEFAULT_API = '/api/v1';
       const urlParams = new URLSearchParams(window.location.search)
       const serverUrl = (urlParams.get('api') || DEFAULT_API).replace(/\/$/, '')
 
@@ -82,8 +82,9 @@
                   }
                 })
                 .then(() => this.getItems())
-                .catch((err) => console.error(err))
-            },
+                .catch((err) => console.error(err));
+              },
+            
             getItems() {
               fetch(`${serverUrl}/items`, {
                 method: 'GET',
