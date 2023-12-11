@@ -21,7 +21,7 @@
       // Set up function for alpine.js
       function setup(serverUrl) {
         // Default API url config - its hard coded but i kept messing up the ?api= "moose" method
-        const DEFAULT_API = 'https://friendly-capybara-7j9g4x7qgg6fp5xq-8000.app.github.dev/'
+        const DEFAULT_API = '/api/v1'
         const apiUrl = (
           new URLSearchParams(window.location.search).get('api') || DEFAULT_API
         ).replace(/\/$/, '')
